@@ -13,12 +13,27 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
-const allowedOrigins = ["http://localhost:5173"]; // frontend URL
+// When deployed on Vercel, the Express app may receive requests under an `/api/*` path.
+// Strip the `/api` prefix so existing routes like `/login` continue to work.
+app.use((req, _res, next) => {
+    if (req.url === "/api") req.url = "/";
+    else if (req.url.startsWith("/api/")) req.url = req.url.slice(4);
+    next();
+});
+
+// In Vercel the frontend origin changes, so make CORS configurable.
+// Set `CORS_ORIGINS` in Vercel like:
+//   "http://localhost:5173,https://your-frontend-domain.com"
+// If not set, we mirror the request origin (less restrictive but avoids CORS issues).
+const corsOrigins = process.env.CORS_ORIGINS
+  ? process.env.CORS_ORIGINS.split(",").map((s) => s.trim()).filter(Boolean)
+  : true;
+
 app.use(
-    cors({
-        origin: allowedOrigins,
-        credentials: true,
-    })
+  cors({
+    origin: corsOrigins,
+    credentials: true,
+  })
 );
 
 // Routes
@@ -225,12 +240,14 @@ app.get("/search-notes", authenticateToken, async (req, res) => {
 // Start Server
 const PORT = process.env.PORT || 8000;
 
-connectDB().then(() => {
+// Local dev should start a listening server.
+// On Vercel (serverless) we must NOT call `app.listen`; requests are handled by `Backend/api/index.js`.
+if (!process.env.VERCEL) {
+  connectDB().then(() => {
     app.listen(PORT, () => {
-        console.log(`Server running on http://localhost:${PORT}`);
+      console.log(`Server running on http://localhost:${PORT}`);
     });
-    
-
-});
+  });
+}
 
 export default app;
