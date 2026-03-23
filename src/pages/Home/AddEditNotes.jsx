@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Tag from "../../components/Input/Tag";
 import { MdClose } from "react-icons/md";
 import { motion } from "framer-motion";
-import axiosInstance from "../../utils/axiosInstance";
+import axiosInstance from "../../utils/axiosinstance";
 
 const AddEditNotes = ({ noteData, type, getAllNotes, onClose }) => {
     const [title, setTitle] = useState(noteData?.title || "");

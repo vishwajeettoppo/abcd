@@ -6,7 +6,7 @@ import { MdAdd, MdOutlineNotes } from "react-icons/md";
 import AddEditNotes from "./AddEditNotes";
 import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
-import axiosInstance from "../../utils/axiosInstance";
+import axiosInstance from "../../utils/axiosinstance";
 import EmptyCard from "../../components/EmptyCards/EmptyCard";
 
 const Home = () =>{
