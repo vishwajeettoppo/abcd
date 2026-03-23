@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import Profile from "../Cards/Profile";
+import Profile from "../cards/Profile";
 import { useNavigate, useLocation } from "react-router-dom";
-import SearchBar from "../SearchBar/SearchBar";
+import SearchBar from "../SearchBar/Searchbar";
 
 const Navbar = ({ userInfo, onSearchNote, handleClearSearch }) => {
   const [searchQuery, setSearchQuery] = useState("");
